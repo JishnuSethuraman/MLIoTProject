@@ -46,7 +46,8 @@ def save_data(sensor_dfs, folder='sensor_data'):
             pickle.dump(sensor_df, file)
 
 def main():
-    file_path = r'D:\vscodefiles\MLIoTProject\human_activity_sensor_data_in_home_environment\human_activity_raw_sensor_data\sensor_sample_float.csv'
+    #file_path = r'D:\vscodefiles\MLIoTProject\human_activity_sensor_data_in_home_environment\human_activity_raw_sensor_data\sensor_sample_float.csv'
+    file_path = "/Users/roshanpatel/Downloads/human_activity_raw_sensor_data/sensor_sample_float.csv"
     print("Processing data...")
     sensor_dfs = process_data(file_path)
     save_data(sensor_dfs)
