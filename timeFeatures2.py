@@ -3,14 +3,19 @@ import matplotlib.pyplot as plt
 import pickle
 import os
 from sklearn.preprocessing import StandardScaler
+from tqdm import tqdm
+import time
 
 def process_data(file_path):
     # Read the csv file into a dataframe
-    df = pd.read_csv(file_path)
-
+    print("File found")
+    tqdm.pandas()
+    #df = pd.read_csv(file_path)
+    df = pd.concat([chunk for chunk in tqdm(pd.read_csv(file_path, chunksize=1000), desc='Loading data')])
+    print("csv file imported")
     # Convert the 'timestamp' column to datetime format
     df['timestamp'] = pd.to_datetime(df['timestamp'])
-
+    print("Times stampped")
     # Extract time features
     df['hour'] = df['timestamp'].dt.hour
     df['day_of_week'] = df['timestamp'].dt.dayofweek  # Monday=0, Sunday=6
@@ -18,7 +23,7 @@ def process_data(file_path):
                             bins=[0, 6, 12, 18, 24], 
                             labels=['Night', 'Morning', 'Afternoon', 'Evening'],
                             right=False)
-
+    print("time features extracted")
     print(len(df))  # Length of the dataframe
 
     # Sort the dataframe by timestamp
@@ -28,7 +33,7 @@ def process_data(file_path):
     sensor_dfs = {sensor_id: group for sensor_id, group in df_sorted.groupby('sensor_id')}
 
     # Resample and average 'value' while keeping other columns as is
-    for sensor_id, sensor_df in sensor_dfs.items():
+    for sensor_id, sensor_df in tqdm(sensor_dfs.items(), desc ="Sampling Data", unit="data"):
         sensor_df = sensor_df.resample('T', on='timestamp').agg({'value': 'mean', 'hour': 'first', 'day_of_week': 'first', 'part_of_day': 'first'})
 
         # Fill NaN values with 0
