@@ -114,9 +114,13 @@ def main():
     file_path = "/Users/roshanpatel/Downloads/human_activity_raw_sensor_data/sensor_sample_int.csv"
     file_path2 = "/Users/roshanpatel/Downloads/human_activity_raw_sensor_data/sensor_sample_float.csv"
     print("Processing data...")
-    sensor_dfs = process_data(file_path)
-    sensor_dfs2 = process_data(file_path2)
-    selected_sensor_ids = [5896, 6686, 5892, 6687]  # List of sensor IDs you want to align
+    sensor_dfs = process_data(file_path2)
+    float_df = pd.DataFrame(sensor_dfs,index=['0'])
+    float_df.to_csv("Sampled_float")
+    sensor_dfs2 = process_data(file_path)
+    int_df = pd.DataFrame(sensor_dfs2,index=['0'])
+    int_df.to_csv("Sampled_Int")
+    selected_sensor_ids = [5896,5892]  # List of sensor IDs you want to align
     aligned_sensors = align_sensors(sensor_dfs, sensor_dfs2, selected_sensor_ids)
     save_data(aligned_sensors)
     normalized_combined_df = normalize_and_aggregate(aligned_sensors, selected_sensor_ids)
