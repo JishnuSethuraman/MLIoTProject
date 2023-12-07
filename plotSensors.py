@@ -2,10 +2,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the CSV file into a DataFrame
-df = pd.read_csv('rooms.csv')
+df = pd.read_csv('kitchen.csv')
 
 # Assuming your columns are named Sensor1, Sensor2, ..., Sensor9
-sensor_columns = ['value_5896', 'value_5892', 'value_7125','value_5895', 'value_5893', 'value_6253', 'value_5891', 'value_5889', 'value_6127']
+sensor_columns = ['value_5893', 'value_5887','value_6896','value_6635','value_6633','value_6632','value_6253']
 
 # Plot each sensor on a separate plot
 for sensor in sensor_columns:

@@ -2,6 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pickle
 import os
+import csv
+import json
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 import time
@@ -64,12 +66,12 @@ def align_sensors(sensor_dfs1, sensor_dfs2, sensor_ids):
     for sensor_id in sensor_ids:
         sensor_df1 = sensor_dfs1.get(sensor_id)
         sensor_df2 = sensor_dfs2.get(sensor_id)
-
         # Determine the start and end dates from both datasets for the sensor
         if sensor_df1 is not None:
             start_date1, end_date1 = sensor_df1.index.min(), sensor_df1.index.max()
             latest_start = max(latest_start, start_date1) if latest_start else start_date1
             earliest_end = min(earliest_end, end_date1) if earliest_end else end_date1
+           
 
         if sensor_df2 is not None:
             start_date2, end_date2 = sensor_df2.index.min(), sensor_df2.index.max()
@@ -88,11 +90,13 @@ def align_sensors(sensor_dfs1, sensor_dfs2, sensor_ids):
 
 def normalize_and_aggregate(sensor_dfs, sensor_ids):
     normalized_data = []
-
+    #print(sensor_dfs)
+    timestamps = sensor_dfs[sensor_ids[0]]['hour']
+    normalized_data.append(timestamps)
     for sensor_id in sensor_ids:
         # Select the 'value' column (already replaced NaNs with 0s)
         values = sensor_dfs[sensor_id]['value'].values.reshape(-1, 1)
-
+        #print("word")
         # Normalize the values
         scaler = StandardScaler()
         normalized_values = scaler.fit_transform(values)
@@ -114,14 +118,44 @@ def main():
     file_path = "/Users/roshanpatel/Downloads/human_activity_raw_sensor_data/sensor_sample_int.csv"
     file_path2 = "/Users/roshanpatel/Downloads/human_activity_raw_sensor_data/sensor_sample_float.csv"
     print("Processing data...")
+    """
     sensor_dfs = process_data(file_path2)
-    float_df = pd.DataFrame(sensor_dfs,index=['0'])
-    float_df.to_csv("Sampled_float")
+    sensorFloat = sensor_dfs
+    # Convert DataFrame to a dictionary
+    for key, value in sensorFloat.items():
+        if isinstance(value, pd.DataFrame):
+            sensorFloat[key] = value.to_dict(orient='records')
+    # Save the dictionary to a JSON file
+    with open('Sampled_float.json', 'w') as json_file:
+        json.dump(sensorFloat, json_file)
     sensor_dfs2 = process_data(file_path)
-    int_df = pd.DataFrame(sensor_dfs2,index=['0'])
-    int_df.to_csv("Sampled_Int")
-    selected_sensor_ids = [5896,5892]  # List of sensor IDs you want to align
-    aligned_sensors = align_sensors(sensor_dfs, sensor_dfs2, selected_sensor_ids)
+    sensorInt = sensor_dfs2
+    # Convert DataFrame to a dictionary
+    for key, value in sensorInt.items():
+        if isinstance(value, pd.DataFrame):
+            sensorInt[key] = value.to_dict(orient='records')
+    with open('Sampled_int.json', 'w') as json_file:
+        json.dump(sensorInt, json_file)
+    """
+    # Load the dictionary from the JSON file
+    with open('Sampled_float.json', 'r') as json_file:
+        Floatdict = json.load(json_file)
+        Floatdict = dict(Floatdict)
+    # Convert DataFrame back to pandas DataFrame
+    for key, value in Floatdict.items():
+        if isinstance(value, list):  # Assuming list indicates a DataFrame
+            Floatdict[key] = pd.DataFrame(value)
+            # Load the dictionary from the JSON file
+    with open('Sampled_int.json', 'r') as json_file:
+        Intdict = json.load(json_file)
+        Intdict = dict(Intdict)
+    # Convert DataFrame back to pandas DataFrame
+    for key, value in Intdict.items():
+        if isinstance(value, list):  # Assuming list indicates a DataFrame
+            Intdict[key] = pd.DataFrame(value)
+    #selected_sensor_ids = [5896,5892,5895,7125, 5891,5889,6127,5887,6896,6635,6633,6632,6253]  # List of sensor IDs you want to align
+    selected_sensor_ids = ['5893', '5887','6896','6635','6633','6632','6253']
+    aligned_sensors = align_sensors(Intdict, Floatdict, selected_sensor_ids)
     save_data(aligned_sensors)
     normalized_combined_df = normalize_and_aggregate(aligned_sensors, selected_sensor_ids)
     save_data({'combined': normalized_combined_df}, folder='combined')
