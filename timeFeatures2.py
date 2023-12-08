@@ -51,7 +51,7 @@ def process_data(file_path):
     return sensor_dfs
 
 # Function to save data
-def save_data(sensor_dfs, folder='sensor_data'):
+def save_data(sensor_dfs, folder='kitchen_sensor_data'):
     if not os.path.exists(folder):
         os.makedirs(folder)
     for sensor_id, sensor_df in sensor_dfs.items():
@@ -91,8 +91,10 @@ def align_sensors(sensor_dfs1, sensor_dfs2, sensor_ids):
 def normalize_and_aggregate(sensor_dfs, sensor_ids):
     normalized_data = []
     #print(sensor_dfs)
-    timestamps = sensor_dfs[sensor_ids[0]]['hour']
-    normalized_data.append(timestamps)
+    hoursTimestamps = sensor_dfs[sensor_ids[0]]['hour']
+    normalized_data.append(hoursTimestamps)
+    weekTimestamps = sensor_dfs[sensor_ids[0]]['day_of_week']
+    normalized_data.append(weekTimestamps)
     for sensor_id in sensor_ids:
         # Select the 'value' column (already replaced NaNs with 0s)
         values = sensor_dfs[sensor_id]['value'].values.reshape(-1, 1)
@@ -154,11 +156,11 @@ def main():
         if isinstance(value, list):  # Assuming list indicates a DataFrame
             Intdict[key] = pd.DataFrame(value)
     #selected_sensor_ids = [5896,5892,5895,7125, 5891,5889,6127,5887,6896,6635,6633,6632,6253]  # List of sensor IDs you want to align
-    selected_sensor_ids = ['5893', '5887','6896','6635','6633','6632','6253']
+    selected_sensor_ids = ['5887','5893','6896','6635','6633','6632','6253']
     aligned_sensors = align_sensors(Intdict, Floatdict, selected_sensor_ids)
     save_data(aligned_sensors)
     normalized_combined_df = normalize_and_aggregate(aligned_sensors, selected_sensor_ids)
-    save_data({'combined': normalized_combined_df}, folder='combined')
+    save_data({'combined': normalized_combined_df}, folder='kitchen_combined')
 
 if __name__ == "__main__":
     main()
