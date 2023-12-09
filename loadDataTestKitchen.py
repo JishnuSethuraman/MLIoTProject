@@ -27,7 +27,7 @@ cooking_condition = (binary_data[['value_5887','value_5893', 'value_6896', 'valu
 cooking_labels = cooking_condition.astype(int)
 
 # Display the result
-result_df = pd.DataFrame({'hour': binary_data['hour'], 'cooking_label': cooking_labels})
+result_df = pd.DataFrame({'day_of_week': binary_data['day_of_week'],'hour': binary_data['hour'], 'cooking_label': cooking_labels})
 print(result_df)
 result_df.to_pickle('kitchenData.pkl')
 
