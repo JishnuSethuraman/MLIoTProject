@@ -318,12 +318,13 @@ for i in range(105):
 #print(len(series))
 print("series")
 series['combined'] = series['combined'].iloc[1:]
+series.to_pickle("theSeries.pkl")
 #print(series)
 #print(series.min())
 #print(series.max())
 
-plt.plot(series['combined'].iloc[1:10081])
-plt.plot(series['combined'].iloc[10081:20161])
-plt.plot(series['combined'].iloc[20161:30241])
-plt.plot(series['combined'].iloc[30241:40321])
-plt.show()
+# plt.plot(series['combined'].iloc[1:10081])
+# plt.plot(series['combined'].iloc[10081:20161])
+# plt.plot(series['combined'].iloc[20161:30241])
+# plt.plot(series['combined'].iloc[30241:40321])
+# plt.show()
