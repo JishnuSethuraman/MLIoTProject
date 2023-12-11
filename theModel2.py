@@ -5,12 +5,13 @@ import tensorflow as tf
 from keras.preprocessing.sequence import TimeseriesGenerator
 import matplotlib.pyplot as plt
 org = pd.read_pickle("theSeries.pkl")
-df = org[1:10080]
+df = org[1:1440]
+
 df['Date'] = range(1,len(df)+1)
 close_data = df['combined'].values
 close_data = close_data.reshape((-1,1))
 
-split_percent = 0.70
+split_percent = 0.80
 split = int(split_percent*len(close_data))
 
 close_train = close_data[:split]
@@ -50,9 +51,23 @@ print("model tested")
 close_train = close_train.reshape((-1))
 close_test = close_test.reshape((-1))
 prediction = prediction.reshape((-1))
-prediction = prediction
+#prediction = prediction
 date_test = date_test[look_back:]
 print(len(prediction))
+# Assuming prediction is a one-dimensional array
+predicted_label = np.argmax(prediction)
+
+# Convert actual_labels to a one-dimensional array if it's not already
+actual_labels = close_test[look_back:]
+actual_labels = np.ravel(actual_labels)
+
+from sklearn.metrics import f1_score
+
+# Calculate F1 Score
+f1 = f1_score(actual_labels, np.repeat(predicted_label, len(actual_labels)), average='weighted')
+print(f'F1 Score: {f1:.2f}')
+
+
 # Plot the training data in blue
 plt.plot(date_train, close_train, label='Data', linestyle='-', marker = 'o',color='blue')
 # Plot the predicted data in orange

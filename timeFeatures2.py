@@ -156,11 +156,75 @@ def main():
         if isinstance(value, list):  # Assuming list indicates a DataFrame
             Intdict[key] = pd.DataFrame(value)
     #selected_sensor_ids = [5896,5892,5895,7125, 5891,5889,6127,5887,6896,6635,6633,6632,6253]  # List of sensor IDs you want to align
+    # Assuming you have a DataFrame named df
+    # Replace 'column1', 'column2', 'column3' with the actual column names you want to plot
+    #columns_to_plotInt = ['5893', '5889', '5887','6253','6127','5896']
+    columns_to_plotInt = ['6220']
+    #columns_to_plotFloat = ['6896','6635','6633','6632']
+    # Create a separate plot for each column
+    for column in columns_to_plotInt:
+        if column == '5893':
+            name = 'Kitchen - Motion'
+            yLab = 'Motion'
+        if column == '5889':
+            name = 'Living Room - Couch Pressure'
+            yLab = 'Pressure'
+        if column == '5887':
+            name = 'Kitchen - Stove Light'
+            yLab = 'Luminosity'
+        if column == '6253':
+            name = 'Kitchen - Fridge'
+            yLab = 'Contact'
+        if column == '6127':
+            name = 'Living Room - TV Light'
+            yLab = 'Luminosity'
+        if column == '5896':
+            name = 'Bedroom - Bed Pressure'
+            yLab = 'Pressure'
+        if column == '6220':
+            name = ''
+            yLab = ''
+        
+        plt.figure()  # Create a new figure for each plot
+        Intdict[column]['value'].plot(kind='line')  # You can change 'line' to other plot types like 'bar', 'scatter', etc.
+
+        # Customize the plot if needed
+        plt.title(f'{name}')
+        plt.xlabel('Time')
+        plt.ylabel(f'{yLab}')
+        plt.legend(loc='upper right')  # Add legend
+
+        # Show the plot
+        plt.show()
+    # for column in columns_to_plotFloat:
+    #     if column == '6896':
+    #         name = 'Kitchen - Microwave'
+    #         yLab = 'Current'
+    #     if column == '6635':
+    #         name = 'Kitchen - Kettle'
+    #         yLab = 'Current'
+    #     if column == '6633':
+    #         name = 'Kitchen - Sandwich Maker'
+    #         yLab = 'Current'
+    #     if column == '6632':
+    #         name = 'Kitchen - Coffee Maker'
+    #         yLab = 'Current'
+    #     plt.figure()  # Create a new figure for each plot
+    #     Floatdict[column]['value'].plot(kind='line')  # You can change 'line' to other plot types like 'bar', 'scatter', etc.
+
+    #     # Customize the plot if needed
+    #     plt.title(f'{name}')
+    #     plt.xlabel('Time')
+    #     plt.ylabel(f'{yLab}')
+    #     plt.legend(loc='upper right')  # Add legend
+
+    #     # Show the plot
+    #     plt.show()
     selected_sensor_ids = ['5896','5887']
     aligned_sensors = align_sensors(Intdict, Floatdict, selected_sensor_ids)
-    save_data(aligned_sensors)
+    #save_data(aligned_sensors)
     normalized_combined_df = normalize_and_aggregate(aligned_sensors, selected_sensor_ids)
-    save_data({'combined': normalized_combined_df}, folder='bed_combined')
+    #save_data({'combined': normalized_combined_df}, folder='bed_combined')
 
 if __name__ == "__main__":
     main()
