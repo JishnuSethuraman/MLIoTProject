@@ -28,7 +28,7 @@ bed_condition = (binary_data[['value_5896']].any(axis=1))
 bed_labels = bed_condition.astype(int)
 bed_labels = bed_labels.replace(1,3)
 # Display the result
-result_df = pd.DataFrame({'day_of_week': binary_data['day_of_week'], 'hour':df['hour'],'bed_label': bed_labels})
+result_df = pd.DataFrame({'day_of_week': binary_data['day_of_week'], 'hour':df['hour'],'bed_label': bed_labels, 'bedPressure': binary_data['value_5896']})
 print(result_df)
 result_df.to_pickle('bedData.pkl')
 

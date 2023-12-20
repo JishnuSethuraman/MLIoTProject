@@ -28,7 +28,7 @@ living_condition = (binary_data[['value_6127', 'value_5889']].any(axis=1))
 living_labels = living_condition.astype(int)
 living_labels = living_labels.replace(1,2)
 # Display the result
-result_df = pd.DataFrame({'day_of_week': binary_data['day_of_week'], 'hour':df['hour'],'living_label': living_labels})
+result_df = pd.DataFrame({'day_of_week': binary_data['day_of_week'], 'hour':df['hour'],'living_label': living_labels, 'TV Light':binary_data['value_6127'],'Couch Pressure':binary_data['value_5889']})
 print(result_df)
 result_df.to_pickle('livingData.pkl')
 
